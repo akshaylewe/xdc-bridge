@@ -20,6 +20,7 @@ import "../interfaces/IFlashCallback.sol";
 import "../libraries/SignatureUtil.sol";
 import "../libraries/Flags.sol";
 import "../interfaces/IWethGate.sol";
+import "../periphery/DeBridgeToken.sol";
 
 /// @dev Contract for assets transfers. The user can transfer the asset to any of the approved chains.
 /// The admin manages the assets, fees and other important protocol parameters.
@@ -915,7 +916,7 @@ contract DeBridgeGate is
     ) internal {
         if (_amount > 0) {
             // require(false, 'Token not found');
-            // DeBridgeToken(_token).mint(_receiver, _amount);
+            DeBridgeToken(_token).mint(_receiver, _amount);
         }
     }
 
