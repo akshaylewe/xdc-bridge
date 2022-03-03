@@ -134,7 +134,7 @@ contract FeesCalculator is
             bool chainIsSupported,
             uint16 chainTransferFeeBps
         ) = gate.getChainToConfig(_chainIdTo);
-        if (!chainIsSupported) revert DeBridgeGate.WrongChainTo();
+        // if (!chainIsSupported) revert DeBridgeGate.WrongChainTo();
 
         (uint16 discountFixBps, uint16 discountTransferBps) = gate.feeDiscount(_sender);
 

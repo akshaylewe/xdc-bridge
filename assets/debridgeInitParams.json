@@ -1,7 +1,7 @@
 {
   "test": {
-    "deBridgeTokenAdmin": "0x24b8d26962641ea81cb7570c1b59d955c9193f23",
-    "treasuryAddress": "0x24b8d26962641ea81cb7570c1b59d955c9193f23",
+    "deBridgeTokenAdmin": "0x852e7627aEFF3ed6105F600D985cC6f74DBd6640",
+    "treasuryAddress": "0x852e7627aEFF3ed6105F600D985cC6f74DBd6640",
     "minConfirmations": 2,
     "confirmationThreshold": 3,
     "excessConfirmations": 3,
@@ -19,9 +19,11 @@
       56,
       128,
       137,
-      42161
+      42161,
+      51
     ],
     "fixedNativeFee": [
+      "10000000000000000",
       "10000000000000000",
       "10000000000000000",
       "10000000000000000",
@@ -30,6 +32,11 @@
     "globalFixedNativeFee": "10000000000000000",
     "globalTransferFeeBps": "10",
     "chainSupportInfo": [
+      {
+        "fixedNativeFee": "0",
+        "transferFeeBps": "0",
+        "isSupported": true
+      },
       {
         "fixedNativeFee": "0",
         "transferFeeBps": "0",
@@ -53,8 +60,8 @@
     ]
   },
   "kovan": {
-    "deBridgeTokenAdmin": "0x24b8d26962641ea81cb7570c1b59d955c9193f23",
-    "treasuryAddress": "0x24b8d26962641ea81cb7570c1b59d955c9193f23",
+    "deBridgeTokenAdmin": "0x852e7627aEFF3ed6105F600D985cC6f74DBd6640",
+    "treasuryAddress": "0x852e7627aEFF3ed6105F600D985cC6f74DBd6640",
     "minConfirmations": 2,
     "confirmationThreshold": 3,
     "excessConfirmations": 3,
@@ -67,18 +74,20 @@
       "wethGate": true
     },
     "external": {
-      "WETH": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+      "WETH": "0xB0664af5a1b3966334770Dc00900D4f7dEc8aBcb",
       "WETHName": "Wrapped Ether",
       "WETHSymbol": "WETH",
-      "UniswapFactory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f"
+      "UniswapFactory": "0x47115fef7549E7bE1Be22a8fe1528d985Fc334e4"
     },
     "supportedChains": [
       97,
       256,
       421611,
-      80001
+      80001,
+      51
     ],
     "fixedNativeFee": [
+      "10000000000000000",
       "10000000000000000",
       "10000000000000000",
       "10000000000000000",
@@ -87,6 +96,11 @@
     "globalFixedNativeFee": "10000000000000000",
     "globalTransferFeeBps": "10",
     "chainSupportInfo": [
+      {
+        "fixedNativeFee": "0",
+        "transferFeeBps": "0",
+        "isSupported": true
+      },
       {
         "fixedNativeFee": "0",
         "transferFeeBps": "0",
@@ -640,6 +654,11 @@
         "fixedNativeFee": "0",
         "transferFeeBps": "0",
         "isSupported": true
+      },
+      {
+        "fixedNativeFee": "0",
+        "transferFeeBps": "0",
+        "isSupported": true
       }
     ]
   },
@@ -659,6 +678,10 @@
     {
       "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
       "chainId": 137
+    },
+    {
+      "address": "0xB0664af5a1b3966334770Dc00900D4f7dEc8aBcb",
+      "chainId": 51
     },
     {
       "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
@@ -685,6 +708,11 @@
       "accept": true,
       "name": "Matic",
       "symbol": "MATIC"
+    },
+    {
+      "accept": true,
+      "name": "XDC",
+      "symbol": "XDC"
     },
     {
       "accept": true,

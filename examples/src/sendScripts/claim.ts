@@ -1,8 +1,8 @@
 // @ts-nocheck TODO remove and fix
 import Web3 from "web3";
 import DeBridgeGateJson from "../../../Gate.json";
+import DeployerJson from "../../../Deployer.json";
 import log4js from "log4js";
-import {getSubmission, getSubmissionConfirmations} from "./apiService";
 import {log4jsConfig, Web3RpcUrl} from "./constants";
 import "./parseDotEnvs";
 
@@ -15,7 +15,8 @@ const account = new Web3().eth.accounts.privateKeyToAccount(privKey);
 const senderAddress =  account.address;
 logger.info(`senderAddress : ${senderAddress}`);
 
-const {DEBRIDGEGATE_ADDRESS, API_ENDPOINT} = process.env;
+const {API_ENDPOINT} = process.env;
+const DEBRIDGEGATE_ADDRESS = '0x1955E7c03d73e46c704D0921969Dc54C8FB6ce0e'
 if (process.argv.length !== 3) {
     logger.error('Add submission id args');
 }
@@ -24,25 +25,19 @@ logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
 
 (async () => {
     try {
-        //get submission
-        const submission = await getSubmission(SUBMISSION_ID, API_ENDPOINT);
-        if (!submission) {
-            logger.error(`Submission not found`);
-            return;
-        }
-        //get validator's confirmations
-        const confirmationsResponse = await _checkConfirmation(SUBMISSION_ID, process.env.MIN_CONFIRMATIONS);
-        if (!confirmationsResponse.isConfirmed) {
-            logger.error(`Submission is not confirmed`);
-            return;
-        }
-        // check that submission is not used
-        const chainIdTo = submission.chainToId;
+        const chainIdTo = 5777;
         const rpc = Web3RpcUrl[chainIdTo];
         const web3 = new Web3(rpc);
 
         const debridgeGateInstance = new web3.eth.Contract(DeBridgeGateJson.abi, DEBRIDGEGATE_ADDRESS);
+        const deployerInstance = new web3.eth.Contract(DeployerJson.abi, '0x7CbAA016D425d3bB15182f8214907fbaF3Bce498');
         const isSubmissionUsed = await debridgeGateInstance.methods.isSubmissionUsed(SUBMISSION_ID).call();
+        const debridge_id = await debridgeGateInstance.methods.getDebridgeId(51, '0xeAe46f035CfAA057D31F9a3777285beC69d9679C').call();
+        logger.info(`DEBRIDGE_IDs : ${debridge_id}`);
+        const _token = await deployerInstance.methods.deployAsset(debridge_id, 'Token Mapped with XDC Chain', 'WXDC1', 18).call();
+        logger.info(`Token : ${_token}`);
+        // logger.info(`DEBRIDGE_ID : ${debridge_id}`);
+
 
         if (isSubmissionUsed) {
             logger.error(`Submission already used`);
@@ -50,22 +45,22 @@ logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
         }
 
         let mergedSignatures = '0x';
-        for (const confiramtion of confirmationsResponse.confirmations) {
-            mergedSignatures += confiramtion.signature.substring(2, confiramtion.signature.length);
-        }
+        // for (const confiramtion of confirmationsResponse.confirmations) {
+        //     mergedSignatures += confiramtion.signature.substring(2, confiramtion.signature.length);
+        // }
 
-        const autoParamsFrom = await _packSubmissionAutoParamsFrom(web3, submission.nativeSender, submission.rawAutoparams);
+        const autoParamsFrom = await _packSubmissionAutoParamsFrom(web3, '0x');
 
         await claim(
             web3,
             debridgeGateInstance,
-            submission.debridgeId,
-            submission.amount,
-            submission.eventOriginChainId,
-            submission.receiver,
-            submission.nonce,
+            debridge_id,
+            '50000000000000000',
+            '51',
+            '0x852e7627aEFF3ed6105F600D985cC6f74DBd6640',
+            SUBMISSION_ID,
             mergedSignatures,
-            autoParamsFrom,
+            autoParamsFrom
         );
     } catch (e) {
         logger.error(e);
@@ -100,27 +95,27 @@ async function claim(
     });
 
 
-    const estimateGas = await debridgeGateInstance.methods
-    .claim(
-        debridgeId, //bytes32 _debridgeId,
-        amount, // uint256 _amount,
-        chainIdFrom, //uint256 _chainIdFrom,
-        receiver, // address _receiver,
-        subNonce, // uint256 _nonce
-        signatures, //bytes calldata _signatures,
-        autoParams, //bytes calldata _autoParams
-    )
-    .estimateGas({
-        from: senderAddress
-    });
+    // const estimateGas = await debridgeGateInstance.methods
+    // .claim(
+    //     debridgeId, //bytes32 _debridgeId,
+    //     amount, // uint256 _amount,
+    //     chainIdFrom, //uint256 _chainIdFrom,
+    //     receiver, // address _receiver,
+    //     subNonce, // uint256 _nonce
+    //     signatures, //bytes calldata _signatures,
+    //     autoParams, //bytes calldata _autoParams
+    // )
+    // .estimateGas({
+    //     from: senderAddress
+    // });
 
-    logger.info("estimateGas", estimateGas.toString());
+    // logger.info("estimateGas", estimateGas.toString());
 
     const tx =
     {
         from: senderAddress,
         to: DEBRIDGEGATE_ADDRESS,
-        gas: estimateGas,
+        gas: 300000,
         value: 0,
         gasPrice: gasPrice,
         nonce,
@@ -165,7 +160,7 @@ async function _checkConfirmation(submissionId, minConfirmations) {
 }
 
 
-async function _packSubmissionAutoParamsFrom(web3, nativeSender, autoParams) {
+async function _packSubmissionAutoParamsFrom(web3, autoParams) {
     if (autoParams !== '0x' && autoParams !== '') {
         const decoded = web3.eth.abi.decodeParameters(
             ['tuple(uint256,uint256, bytes, bytes)'], autoParams
@@ -173,7 +168,7 @@ async function _packSubmissionAutoParamsFrom(web3, nativeSender, autoParams) {
         logger.info(`autoParams: ${autoParams}, decoded: ${decoded}`);
         const encoded = web3.eth.abi.encodeParameter(
             'tuple(uint256,uint256, address, bytes, bytes)',
-            [decoded[0][0], decoded[0][1], decoded[0][2], decoded[0][3], nativeSender]
+            [decoded[0][0], decoded[0][1], decoded[0][2], decoded[0][3]]
         );
         logger.info(`encoded: ${encoded}`);
         return encoded;

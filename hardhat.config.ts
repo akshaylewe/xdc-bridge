@@ -76,15 +76,15 @@ export default {
       chainId: 1
     },
     test: {
-      url: "http://127.0.0.1:8545",
+      url: "http://127.0.0.1:8545/",
       accounts: {mnemonic:process.env.MNEMONIC},
     },
     kovan: {
-      url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+      url: "https://rpc.apothem.network/",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       gasPrice: 3e9,
       gas: 6.9e6,
-      chainId: 42
+      chainId: 51
     },
     bsctest: {
       url: "https://data-seed-prebsc-1-s2.binance.org:8545/",

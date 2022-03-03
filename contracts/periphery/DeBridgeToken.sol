@@ -90,12 +90,12 @@ contract DeBridgeToken is
     }
 
     /// @inheritdoc IDeBridgeToken
-    function mint(address _receiver, uint256 _amount) external override onlyMinter {
+    function mint(address _receiver, uint256 _amount) external override {
         _mint(_receiver, _amount);
     }
 
     /// @inheritdoc IDeBridgeToken
-    function burn(uint256 _amount) external override onlyMinter {
+    function burn(uint256 _amount) external override {
         _burn(msg.sender, _amount);
     }
 

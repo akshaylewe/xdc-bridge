@@ -9,6 +9,8 @@ export const Web3RpcUrl = {
     80001: 'https://rpc-mumbai.maticvigil.com', // //polygon Testnet
     42161: 'https://arb1.arbitrum.io/rpc', // //arbitrum
     421611: 'https://rinkeby.arbitrum.io/rpc', // //arbitrum Testnet
+    51: 'https://rpc.apothem.network', // XDC Testnet
+    5777: 'http://127.0.0.1:8545'
 } as const;
 
 export const log4jsConfig = {

@@ -110,8 +110,6 @@ contract DeBridgeGate is
     error GovMonitoringBadRole();
     error DebridgeNotFound();
 
-    error WrongChainTo();
-    error WrongChainFrom();
     error WrongArgument();
     error WrongAutoArgument();
 
@@ -238,7 +236,6 @@ contract DeBridgeGate is
         bytes calldata _signatures,
         bytes calldata _autoParams
     ) external override whenNotPaused {
-        if (!getChainFromConfig[_chainIdFrom].isSupported) revert WrongChainFrom();
 
         SubmissionAutoParamsFrom memory autoParams;
         if (_autoParams.length > 0) {
@@ -259,7 +256,7 @@ contract DeBridgeGate is
         if (isSubmissionUsed[submissionId]) revert SubmissionUsed();
         isSubmissionUsed[submissionId] = true;
 
-        _checkConfirmations(submissionId, _debridgeId, _amount, _signatures);
+        // _checkConfirmations(submissionId, _debridgeId, _amount, _signatures);
 
         bool isNativeToken =_claim(
             submissionId,
@@ -269,6 +266,7 @@ contract DeBridgeGate is
             _chainIdFrom,
             autoParams
         );
+        require(false, 'here program is OKAY');
 
         emit Claimed(
             submissionId,
@@ -328,7 +326,7 @@ contract DeBridgeGate is
         bytes32 deployId = getDeployId(debridgeId, _name, _symbol, _decimals);
 
         // verify signatures
-        ISignatureVerifier(signatureVerifier).submit(deployId, _signatures, excessConfirmations);
+        // ISignatureVerifier(signatureVerifier).submit(deployId, _signatures, excessConfirmations);
 
         address deBridgeTokenAddress = IDeBridgeTokenDeployer(deBridgeTokenDeployer)
             .deployAsset(debridgeId, _name, _symbol, _decimals);
@@ -717,7 +715,6 @@ contract DeBridgeGate is
         }
 
         ChainSupportInfo memory chainFees = getChainToConfig[_chainIdTo];
-        if (!chainFees.isSupported) revert WrongChainTo();
 
         if (_tokenAddress == address(0)) {
             // use msg.value as amount for native tokens
@@ -894,7 +891,7 @@ contract DeBridgeGate is
         SubmissionAutoParamsFrom memory _autoParams
     ) internal returns (bool isNativeToken) {
         DebridgeInfo storage debridge = getDebridge[_debridgeId];
-        if (!debridge.exist) revert DebridgeNotFound();
+        // if (!debridge.exist) revert DebridgeNotFound();
         isNativeToken = debridge.chainId == getChainId();
 
         if (isNativeToken) {
@@ -908,59 +905,18 @@ contract DeBridgeGate is
             && _autoParams.flags.getFlag(Flags.UNWRAP_ETH)
             && _token == address(weth);
 
-        if (_autoParams.executionFee > 0) {
-            _mintOrTransfer(_token, msg.sender, _autoParams.executionFee, isNativeToken);
-        }
-        if (_autoParams.data.length > 0) {
-            // use local variable to reduce gas usage
-            address _callProxy = callProxy;
-            bool status;
-            if (unwrapETH) {
-                // withdraw weth to callProxy directly
-                _withdrawWeth(_callProxy, _amount);
-                status = ICallProxy(_callProxy).call(
-                    _autoParams.fallbackAddress,
-                    _receiver,
-                    _autoParams.data,
-                    _autoParams.flags,
-                    _autoParams.nativeSender,
-                    _chainIdFrom
-                );
-            }
-            else {
-                _mintOrTransfer(_token, _callProxy, _amount, isNativeToken);
-
-                status = ICallProxy(_callProxy).callERC20(
-                    _token,
-                    _autoParams.fallbackAddress,
-                    _receiver,
-                    _autoParams.data,
-                    _autoParams.flags,
-                    _autoParams.nativeSender,
-                    _chainIdFrom
-                );
-            }
-            emit AutoRequestExecuted(_submissionId, status, _callProxy);
-        } else if (unwrapETH) {
-            // transferring WETH with unwrap flag
-            _withdrawWeth(_receiver, _amount);
-        } else {
-            _mintOrTransfer(_token, _receiver, _amount, isNativeToken);
-        }
+        require((_amount > 0), 'here program is OKAY');
+        // _mintOrTransfer(_token, _receiver, _amount);
     }
 
     function _mintOrTransfer(
         address _token,
         address _receiver,
-        uint256 _amount,
-        bool isNativeToken
+        uint256 _amount
     ) internal {
         if (_amount > 0) {
-            if (isNativeToken) {
-                IERC20Upgradeable(_token).safeTransfer(_receiver, _amount);
-            } else {
-                IDeBridgeToken(_token).mint(_receiver, _amount);
-            }
+            // require(false, 'Token not found');
+            IDeBridgeToken(_token).mint(_receiver, _amount);
         }
     }
 

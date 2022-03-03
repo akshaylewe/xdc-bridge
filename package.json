@@ -44,7 +44,8 @@
     "log4js": "^6.3.0",
     "rimraf": "^3.0.2",
     "solidity-docgen": "https://github.com/Vsevo1od/solidity-docgen#56fcb9fae85305235d0b3af7d086cb4f7b471d3b",
-    "truffle": "^5.4.8"
+    "truffle": "^5.4.8",
+    "xdc3": "^1.3.13416"
   },
   "dependenciesComments": {
     "solidity-docgen": "TODO use npm version after https://github.com/OpenZeppelin/solidity-docgen/issues/339 and https://github.com/OpenZeppelin/solidity-docgen/issues/303 are fixed"

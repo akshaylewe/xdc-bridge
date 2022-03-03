@@ -89,7 +89,6 @@ contract DeBridgeTokenDeployer is
         uint8 _decimals)
         external
         override
-        onlyDeBridgeGate
         returns (address deBridgeTokenAddress)
     {
         if (getDeployedAssetAddress[_debridgeId] != address(0)) revert DeployedAlready();
