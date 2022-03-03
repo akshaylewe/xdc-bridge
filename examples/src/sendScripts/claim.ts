@@ -16,7 +16,7 @@ const senderAddress =  account.address;
 logger.info(`senderAddress : ${senderAddress}`);
 
 const {API_ENDPOINT} = process.env;
-const DEBRIDGEGATE_ADDRESS = '0x1955E7c03d73e46c704D0921969Dc54C8FB6ce0e'
+const DEBRIDGEGATE_ADDRESS = '0x446F40Fe8349f48d200c9227E65C651f43f632c6'
 if (process.argv.length !== 3) {
     logger.error('Add submission id args');
 }
@@ -30,7 +30,7 @@ logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
         const web3 = new Web3(rpc);
 
         const debridgeGateInstance = new web3.eth.Contract(DeBridgeGateJson.abi, DEBRIDGEGATE_ADDRESS);
-        const deployerInstance = new web3.eth.Contract(DeployerJson.abi, '0x7CbAA016D425d3bB15182f8214907fbaF3Bce498');
+        const deployerInstance = new web3.eth.Contract(DeployerJson.abi, '0x93cB6DfE917e802539afdc0050538cb30353175e');
         const isSubmissionUsed = await debridgeGateInstance.methods.isSubmissionUsed(SUBMISSION_ID).call();
         const debridge_id = await debridgeGateInstance.methods.getDebridgeId(51, '0xeAe46f035CfAA057D31F9a3777285beC69d9679C').call();
         logger.info(`DEBRIDGE_IDs : ${debridge_id}`);

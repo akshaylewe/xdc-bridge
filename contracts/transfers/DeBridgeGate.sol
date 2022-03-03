@@ -266,7 +266,6 @@ contract DeBridgeGate is
             _chainIdFrom,
             autoParams
         );
-        require(false, 'here program is OKAY');
 
         emit Claimed(
             submissionId,
@@ -916,7 +915,7 @@ contract DeBridgeGate is
     ) internal {
         if (_amount > 0) {
             // require(false, 'Token not found');
-            IDeBridgeToken(_token).mint(_receiver, _amount);
+            // DeBridgeToken(_token).mint(_receiver, _amount);
         }
     }
 
