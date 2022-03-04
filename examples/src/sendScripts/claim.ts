@@ -16,7 +16,7 @@ const senderAddress =  account.address;
 logger.info(`senderAddress : ${senderAddress}`);
 
 const {API_ENDPOINT} = process.env;
-const DEBRIDGEGATE_ADDRESS = '0x062D679817CC081953e5A1C70D56e7D9982F058b'
+const DEBRIDGEGATE_ADDRESS = '0x196817647f6d3AcC2b9b61cbd413a5f1Fc7f4AAB'
 const SUBMISSION_ID = process.env.SUBMISSION_ID;
 logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
 
@@ -27,13 +27,14 @@ logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
         const web3 = new Web3(rpc);
 
         const debridgeGateInstance = new web3.eth.Contract(DeBridgeGateJson.abi, DEBRIDGEGATE_ADDRESS);
-        const deployerInstance = new web3.eth.Contract(DeployerJson.abi, '0x5A7fD7Af7E45d6550EC970A7326912b4e96e4BF8');
+        const deployerInstance = new web3.eth.Contract(DeployerJson.abi, '0x9d3aa77303f6175CEDc2Ea55823A55F434793AF0');
         const isSubmissionUsed = await debridgeGateInstance.methods.isSubmissionUsed(SUBMISSION_ID).call();
         const debridge_id = await debridgeGateInstance.methods.getDebridgeId(51, '0xeAe46f035CfAA057D31F9a3777285beC69d9679C').call();
+        const debridge_ids = await debridgeGateInstance.methods.deployNewAsset('0xeAe46f035CfAA057D31F9a3777285beC69d9679C', 51, 'MappedXDC', 'MXDC', 18, '0x').call();
         logger.info(`DEBRIDGE_IDs : ${debridge_id}`);
-        const _token = await deployerInstance.methods.deployAsset(debridge_id, 'Token Mapped with XDC Chain', 'WXDC1', 18).call();
-        logger.info(`Token : ${_token}`);
-        // logger.info(`DEBRIDGE_ID : ${debridge_id}`);
+        // const _token = await deployerInstance.methods.deployAsset(debridge_id, 'Token Mapped with XDC Chain', 'WXDC1', 18).call();
+        // logger.info(`Token : ${_token}`);
+        logger.info(`Token2 : ${debridge_ids[1]}`);
 
 
         if (isSubmissionUsed) {

