@@ -16,25 +16,24 @@ const senderAddress =  account.address;
 logger.info(`senderAddress : ${senderAddress}`);
 
 const {API_ENDPOINT} = process.env;
-const DEBRIDGEGATE_ADDRESS = '0x196817647f6d3AcC2b9b61cbd413a5f1Fc7f4AAB'
+const DEBRIDGEGATE_ADDRESS = '0x3Ebb7150C553113509f1d488c481F800a2983688'
 const SUBMISSION_ID = process.env.SUBMISSION_ID;
 logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
 
 (async () => {
     try {
-        const chainIdTo = 5777;
+        const chainIdTo = 3;
         const rpc = Web3RpcUrl[chainIdTo];
         const web3 = new Web3(rpc);
 
         const debridgeGateInstance = new web3.eth.Contract(DeBridgeGateJson.abi, DEBRIDGEGATE_ADDRESS);
-        const deployerInstance = new web3.eth.Contract(DeployerJson.abi, '0x9d3aa77303f6175CEDc2Ea55823A55F434793AF0');
         const isSubmissionUsed = await debridgeGateInstance.methods.isSubmissionUsed(SUBMISSION_ID).call();
         const debridge_id = await debridgeGateInstance.methods.getDebridgeId(51, '0xeAe46f035CfAA057D31F9a3777285beC69d9679C').call();
+        const _token = '0xfd5dF7C64C164411438Ea0448240c0137495d1D8'
+        // const asset = await debridgeGateInstance.methods._addAsset(debridge_id, _token, '0xeAe46f035CfAA057D31F9a3777285beC69d9679C', 51).call();
         const debridge_ids = await debridgeGateInstance.methods.deployNewAsset('0xeAe46f035CfAA057D31F9a3777285beC69d9679C', 51, 'MappedXDC', 'MXDC', 18, '0x').call();
         logger.info(`DEBRIDGE_IDs : ${debridge_id}`);
-        // const _token = await deployerInstance.methods.deployAsset(debridge_id, 'Token Mapped with XDC Chain', 'WXDC1', 18).call();
-        // logger.info(`Token : ${_token}`);
-        logger.info(`Token2 : ${debridge_ids[1]}`);
+        logger.info(`Token : ${_token}`);
 
 
         if (isSubmissionUsed) {
@@ -53,12 +52,13 @@ logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
             web3,
             debridgeGateInstance,
             debridge_id,
-            '50000000000000000',
+            '5',
             '51',
             '0x852e7627aEFF3ed6105F600D985cC6f74DBd6640',
             SUBMISSION_ID,
             mergedSignatures,
-            autoParamsFrom
+            autoParamsFrom,
+            _token
         );
     } catch (e) {
         logger.error(e);
@@ -69,13 +69,14 @@ logger.info(`SUBMISSION_ID : ${SUBMISSION_ID}`);
 async function claim(
     web3,
     debridgeGateInstance,
-    debridgeId, //bytes32 _debridgeId,
-    amount, // uint256 _amount,
+    debridgeId,  //bytes32 _debridgeId,
+    amount,      // uint256 _amount,
     chainIdFrom, //uint256 _chainIdFrom,
-    receiver, // address _receiver,
-    subNonce, // uint256 _nonce
-    signatures, //bytes calldata _signatures,
-    autoParams, //bytes calldata _autoParams
+    receiver,    // address _receiver,
+    subNonce,    // uint256 _nonce
+    signatures,  //bytes calldata _signatures,
+    autoParams,  //bytes calldata _autoParams,
+    _token,
 ) {
     logger.info("Test claim");
     let nonce = await web3.eth.getTransactionCount(senderAddress);
@@ -89,7 +90,8 @@ async function claim(
         receiver, // address _receiver,
         nonce, // uint256 _nonce
         signatures, //bytes calldata _signatures,
-        autoParams, //bytes calldata _autoParams
+        autoParams, //bytes calldata _autoParams,
+        _token,
     });
 
 
@@ -134,7 +136,8 @@ async function claim(
                 receiver, // address _receiver,
                 subNonce, // uint256 _nonce
                 signatures, //bytes calldata _signatures,
-                autoParams, //bytes calldata _autoParams
+                autoParams, //bytes calldata _autoParams,
+                _token,
             )
             .encodeABI(),
     };

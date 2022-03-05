@@ -2,9 +2,9 @@
   "test": {
     "deBridgeTokenAdmin": "0x852e7627aEFF3ed6105F600D985cC6f74DBd6640",
     "treasuryAddress": "0x852e7627aEFF3ed6105F600D985cC6f74DBd6640",
-    "minConfirmations": 2,
-    "confirmationThreshold": 3,
-    "excessConfirmations": 3,
+    "minConfirmations": 1,
+    "confirmationThreshold": 1,
+    "excessConfirmations": 1,
     "oracles": [],
     "deploy": {
       "wethGate": true
@@ -249,7 +249,7 @@
       "0x2b4e172043527a9435f31688fef6f3589356d1aa"
     ],
     "deploy": {
-      "wethGate": true
+      "wethGate": true 
     },
     "external": {
       "WETH": "",

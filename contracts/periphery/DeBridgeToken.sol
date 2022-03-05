@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity 0.8.7;
 
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "../interfaces/IDeBridgeToken.sol";
 
 /// @dev ERC20 token that is used as wrapped asset to represent the native token value on the other chains.
 contract DeBridgeToken is
     Initializable,
-    AccessControlUpgradeable,
-    ERC20PausableUpgradeable,
+    ERC20Upgradeable,
     IDeBridgeToken
 {
     /// @dev Minter role identifier
@@ -30,27 +28,17 @@ contract DeBridgeToken is
 
     /* ========== ERRORS ========== */
 
-    error MinterBadRole();
-    error PauserBadRole();
+    // error MinterBadRole();
+    // error PauserBadRole();
 
     /* ========== MODIFIERS ========== */
-
-    modifier onlyMinter() {
-        if (!hasRole(MINTER_ROLE, msg.sender)) revert MinterBadRole();
-        _;
-    }
-
-    modifier onlyPauser() {
-        if (!hasRole(PAUSER_ROLE, msg.sender)) revert PauserBadRole();
-        _;
-    }
 
     /// @dev Constructor that initializes the most important configurations.
     /// @param name_ Asset's name.
     /// @param symbol_ Asset's symbol.
     /// @param decimals_ Asset's decimals.
     /// @param admin Address to set as asset's admin.
-    /// @param minters The accounts allowed to int new tokens.
+    /// @param minters The accounts allowed to mint new tokens.
     function initialize(
         string memory name_,
         string memory symbol_,
@@ -64,14 +52,8 @@ contract DeBridgeToken is
         symbol_ = string(abi.encodePacked("de", symbol_));
 
         __ERC20_init_unchained(name_, symbol_);
-
-        _setupRole(DEFAULT_ADMIN_ROLE, admin);
-        _setupRole(PAUSER_ROLE, admin);
+        // require(false, 'im dead');
         uint256 mintersCount = minters.length;
-        for (uint256 i = 0; i < mintersCount; i++) {
-            _setupRole(MINTER_ROLE, minters[i]);
-        }
-
         uint256 chainId;
         assembly {
             chainId := chainid()
@@ -115,7 +97,7 @@ contract DeBridgeToken is
         uint8 _v,
         bytes32 _r,
         bytes32 _s
-    ) external override {
+    ) external {
         require(_deadline >= block.timestamp, "permit: EXPIRED");
         bytes32 digest = keccak256(
             abi.encodePacked(
@@ -146,15 +128,6 @@ contract DeBridgeToken is
         return _decimals;
     }
 
-    /// @dev Pauses all token transfers. The caller must have the `PAUSER_ROLE`.
-    function pause() public onlyPauser {
-        _pause();
-    }
-
-     /// @dev Unpauses all token transfers. The caller must have the `PAUSER_ROLE`.
-    function unpause() public onlyPauser {
-        _unpause();
-    }
 
     function _beforeTokenTransfer(
         address from,

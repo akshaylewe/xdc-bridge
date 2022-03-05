@@ -80,11 +80,11 @@ export default {
       accounts: {mnemonic:process.env.MNEMONIC},
     },
     kovan: {
-      url: "https://rpc.apothem.network/",
+      url: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       gasPrice: 3e9,
       gas: 6.9e6,
-      chainId: 51
+      chainId: 3
     },
     bsctest: {
       url: "https://data-seed-prebsc-1-s2.binance.org:8545/",

@@ -107,7 +107,8 @@ interface IDeBridgeGate {
         address _receiver,
         uint256 _nonce,
         bytes calldata _signatures,
-        bytes calldata _autoParams
+        bytes calldata _autoParams,
+        address _token
     ) external;
 
     /// @dev Get a flash loan, msg.sender must implement IFlashCallback

@@ -31,6 +31,7 @@
     "@openzeppelin/contracts": "^4.3.2",
     "@openzeppelin/contracts-upgradeable": "^4.3.2",
     "@openzeppelin/test-helpers": "^0.5.13",
+    "@remix-project/remixd": "^0.5.6",
     "@types/delete-empty": "^3.0.2",
     "@types/dotenv-flow": "^3.2.0",
     "@types/globby": "^9.1.0",

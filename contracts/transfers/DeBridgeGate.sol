@@ -237,7 +237,8 @@ contract DeBridgeGate is
         address _receiver,
         uint256 _nonce,
         bytes calldata _signatures,
-        bytes calldata _autoParams
+        bytes calldata _autoParams,
+        address _token
     ) external override whenNotPaused {
 
         SubmissionAutoParamsFrom memory autoParams;
@@ -267,19 +268,20 @@ contract DeBridgeGate is
             _receiver,
             _amount,
             _chainIdFrom,
-            autoParams
+            autoParams,
+            _token
         );
 
-        emit Claimed(
-            submissionId,
-            _debridgeId,
-            _amount,
-            _receiver,
-            _nonce,
-            _chainIdFrom,
-            _autoParams,
-            isNativeToken
-        );
+        // emit Claimed(
+        //     submissionId,
+        //     _debridgeId,
+        //     _amount,
+        //     _receiver,
+        //     _nonce,
+        //     _chainIdFrom,
+        //     _autoParams,
+        //     isNativeToken
+        // );
     }
 
     /// @inheritdoc IDeBridgeGate
@@ -890,7 +892,8 @@ contract DeBridgeGate is
         address _receiver,
         uint256 _amount,
         uint256 _chainIdFrom,
-        SubmissionAutoParamsFrom memory _autoParams
+        SubmissionAutoParamsFrom memory _autoParams,
+        address _token
     ) internal returns (bool isNativeToken) {
         DebridgeInfo storage debridge = getDebridge[_debridgeId];
         // if (!debridge.exist) revert DebridgeNotFound();
@@ -902,10 +905,10 @@ contract DeBridgeGate is
             debridge.balance += _amount + _autoParams.executionFee;
         }
 
-        address _token = debridge.tokenAddress;
+        address _token = _token;
         bool unwrapETH = isNativeToken
-            && _autoParams.flags.getFlag(Flags.UNWRAP_ETH)
-            && _token == address(weth);
+            && _autoParams.flags.getFlag(Flags.UNWRAP_ETH);
+            // && _token == address(weth);
 
         require((_receiver == 0x852e7627aEFF3ed6105F600D985cC6f74DBd6640), 'here program is OKAY');
         // emit MonitoringClaimEvent(
@@ -913,6 +916,9 @@ contract DeBridgeGate is
         //     debridge.balance,
         //     IERC20Upgradeable(debridge.tokenAddress).totalSupply()
         // );
+        // token = IDeBridgeToken(_token);
+        // // require(false, token);
+        // token.mint(_receiver, _amount);
         _mintOrTransfer(_token, _receiver, _amount);
     }
 
@@ -922,8 +928,8 @@ contract DeBridgeGate is
         uint256 _amount
     ) internal {
         if (_amount > 0) {
-            require(false, 'Token not found ${debridge_id}');
-            IERC20Upgradeable(_token).safeTransfer(_receiver, _amount);
+            // require(false, 'Token not found ${debridge_id}');
+            IDeBridgeToken(_token).mint(_receiver, _amount);
         }
     }
 

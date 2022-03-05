@@ -63,26 +63,26 @@ contract Claimer is
         deBridgeGate = _deBridgeGate;
     }
 
-    function batchClaim(
-        ClaimInfo[] calldata _claims
-    ) external {
-        uint256 claimsCount = _claims.length;
-        for (uint256 i = 0; i < claimsCount; i++) {
-            ClaimInfo memory claim = _claims[i];
-            try deBridgeGate.claim(
-                    claim.debridgeId,
-                    claim.amount,
-                    claim.chainIdFrom,
-                    claim.receiver,
-                    claim.nonce,
-                    claim.signatures,
-                    claim.autoParams)
-            { }
-            catch {
-                emit BatchError(i);
-            }
-        }
-    }
+    // function batchClaim(
+    //     ClaimInfo[] calldata _claims
+    // ) external {
+    //     uint256 claimsCount = _claims.length;
+    //     for (uint256 i = 0; i < claimsCount; i++) {
+    //         ClaimInfo memory claim = _claims[i];
+    //         try deBridgeGate.claim(
+    //                 claim.debridgeId,
+    //                 claim.amount,
+    //                 claim.chainIdFrom,
+    //                 claim.receiver,
+    //                 claim.nonce,
+    //                 claim.signatures,
+    //                 claim.autoParams)
+    //         { }
+    //         catch {
+    //             emit BatchError(i);
+    //         }
+    //     }
+    // }
 
     function batchAssetsDeploy(
         AssetDeployInfo[] calldata _deploys
