@@ -1,4 +1,5 @@
-// @ts-nocheck TODO remove and fix
+// @ts-nocheck 
+//Importing the Library
 import {config} from "dotenv-flow";
 import DeBridgeGateJson from "../../../Gate.json";
 import log4js from "log4js";
@@ -7,29 +8,51 @@ import Web3 from "web3";
 import {log4jsConfig, Web3RpcUrl} from "./constants";
 const {toWei} = web3Utils;
 import "./parseDotEnvs";
+import "./constantMessage";
 
 config();
 
+//Config the logs
 log4js.configure(log4jsConfig);
 
 const logger = log4js.getLogger('sendETH');
+
+//Fetching the Sender ChainId from the .env file
 const chainIdFrom = process.env.CHAIN_ID_FROM;
+
+//Fetching the Reciever Chain Id from the .env file
 const chainIdTo = process.env.CHAIN_ID_TO;
+
+//Fetching the Amount from the .env file
 const amount = process.env.AMOUNT;
+
+//Fetching the Network URL from the .env file
 const rpc = Web3RpcUrl[chainIdFrom];
 const web3 = new Web3(rpc);
+
+//Fetching the DebridgeGate Address from the .env file
 const debridgeGateAddress = process.env.DEBRIDGEGATE_ADDRESS;
 const debridgeGateInstance = new web3.eth.Contract(DeBridgeGateJson.abi, debridgeGateAddress);
 
+//Fetching the Private Key from the .env file
 const privKey = process.env.PRIVATE_KEY;
 const account = web3.eth.accounts.privateKeyToAccount(privKey);
 const senderAddress = account.address;
 
-logger.info(`ChainId from: ${chainIdFrom}`);
-logger.info(`ChainId to: ${chainIdTo}`);
-logger.info(`Amount: ${amount}`);
-logger.info(`RPC : ${rpc}`);
-logger.info(`senderAddress : ${senderAddress}`);
+//printing the Sender Chain Id 
+logger.info(constantMessage.ChainFrom ,`: ${chainIdFrom}`);
+
+//printing the Receiver Chain Id 
+logger.info( constantMessage.ChainTo,`: ${chainIdTo}`);
+
+//printing the Amount
+logger.info(constantMessage.Amount , `: ${amount}`);
+
+//printing the Network URL
+logger.info(constantMessage.RPC, ` : ${rpc}`);
+
+//printing the Sender Address
+logger.info(  constantMessage.SenderAddress,` ${senderAddress}`);
 
 send(
     toWei(amount), // native amount for transfer
@@ -43,7 +66,17 @@ send(
     "0x" //_autoParams
 ).catch(e => logger.error(e))
 
-
+    /**
+     * @dev performing the send method.
+     * @param fixNativeFee the param 
+     * @param tokenAddress Token Address
+     * @param amount amount should be transfered to the to address
+     * @param chainIdTo Reciver Chain Id
+     * @param receiver Reciver Address
+     * @param permit Permission from the Sender Address
+     * @param autoParams Auto Params 
+     * @return an hash value of the send function.
+     */
 async function send(
     nativeAmount, // native amount for transfer
     tokenAddress, //address _tokenAddress,
@@ -55,11 +88,11 @@ async function send(
     referralCode, //uint32 _referralCode,
     autoParams// bytes calldata _autoParams
 ) {
-    logger.info("Test send");
+    logger.info(constantMessage.Test);
     const nonce = await web3.eth.getTransactionCount(senderAddress);
-    logger.info("Nonce current", nonce);
+    logger.info(constantMessage.NonceCurr, nonce);
     const gasPrice = await web3.eth.getGasPrice();
-    logger.info("gasPrice", gasPrice.toString());
+    logger.info(constantMessage.GasPri, gasPrice.toString());
     logger.info({
         tokenAddress, //address _tokenAddress,
         amount, // uint256 _amount,
@@ -71,6 +104,16 @@ async function send(
         autoParams// bytes calldata _autoParams
     });
 
+    /**
+     * @dev performing the send method.
+     * @param tokenAddress Token Address
+     * @param amount amount should be transfered to the to address
+     * @param chainIdTo Reciver Chain Id
+     * @param receiver Reciver Address
+     * @param permit Permission from the Sender Address
+     * @param autoParams Auto Params 
+     * @return an hash value of the send function.
+     */
     const estimateGas = await debridgeGateInstance.methods
         .send(
             tokenAddress, //address _tokenAddress,
@@ -87,8 +130,9 @@ async function send(
             value: nativeAmount
         });
 
-    logger.info("estimateGas", estimateGas.toString());
+    logger.info(constantMessage.Estimate, estimateGas.toString());
 
+    //Getting the hash value
     const tx =
         {
             from: senderAddress,
@@ -111,14 +155,14 @@ async function send(
                 .encodeABI(),
         };
 
-    logger.info("Tx", tx);
+    logger.info(constantMessage.Tx, tx);
     const signedTx = await web3.eth.accounts.signTransaction(tx, privKey);
-    logger.info("Signed tx", signedTx);
+    logger.info(constantMessage.Sign, signedTx);
 
     const result = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-    logger.info("Result", result);
+    logger.info(constantMessage.Res, result);
     const logs = result.logs.find(l => l.address === debridgeGateAddress);
     const submissionId = logs.data.substring(0, 66);
-    logger.info(`SUBMISSION ID ${submissionId}`);
-    logger.info("Success");
+    logger.info($constantMessage.Submission ,` ${submissionId}`);
+    logger.info(constantMessage.Success);
 }

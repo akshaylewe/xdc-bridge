@@ -1,3 +1,4 @@
+//importing the libraries
 import {ethers, getChainId} from "hardhat";
 import {INCREMENTOR_ADDRESS_ON_TO, TO_CHAIN_ID} from "./constants";
 import {Contract, Wallet} from "ethers";
@@ -6,14 +7,20 @@ import {
     abi as IncrementorAbi
 } from "../../../artifacts/contracts/examples/Incrementor.sol/Incrementor.json";
 import assert from "assert";
+import { constantMessage } from "../sendScripts/constantMessage";
 
+    /**
+     * @dev Geting the Claim incrementor Reciever.
+     * @param ToChainId To map with the Nework URl.
+     * @returns Claimed Times
+     */ 
 const main = async () => {
     assert(await getChainId() === TO_CHAIN_ID.toString(), `Must be called from chain 'to' (${TO_CHAIN_ID}), but got ${await getChainId()}`);
 
     const signer = new Wallet(process.env.DEPLOYER_PRIVATE_KEY as string, ethers.provider);
     const incrementorTo = new Contract(INCREMENTOR_ADDRESS_ON_TO, IncrementorAbi, signer) as Incrementor;
     const claimedTimes = (await incrementorTo.claimedTimes()).toNumber();
-    console.log(`claimedTimes: ${claimedTimes}`);
+    console.log(constantMessage.ClaimTim, ` ${claimedTimes}`);
 }
 
 main()

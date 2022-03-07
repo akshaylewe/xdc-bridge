@@ -1,5 +1,5 @@
+// importing dependences 
 import { config as dotenvConfig } from 'dotenv-flow';
-
 import { task } from "hardhat/config"
 import '@nomiclabs/hardhat-truffle5';
 import 'hardhat-deploy';
@@ -13,14 +13,17 @@ import 'solidity-coverage';
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
 
+//Config the .env file
 dotenvConfig();
 
+//Exporting the defalt function
 export default {
   gasReporter: {
     currency: "USD",
     gasPrice: 100,
   },
 
+//Paths of the file
   paths: {
     sources: "./contracts",
     tests: "./test",
@@ -37,7 +40,9 @@ export default {
    *
    * $ truffle test --network <network-name>
    */
-  //61e2db80d80fef89b7a5fa748cf46471cb2fa91f0248ee36675d5e28a84d932b
+  //
+
+  //solidity complier version and settings
   solidity: {
     compilers: [
       {
@@ -75,10 +80,14 @@ export default {
       accounts:{mnemonic:process.env.MNEMONIC},
       chainId: 1
     },
+
+  //test url for connecting to ganache
     test: {
       url: "http://127.0.0.1:8545/",
       accounts: {mnemonic:process.env.MNEMONIC},
     },
+
+  //kovan testnet URL with chain id
     kovan: {
       url: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
@@ -86,17 +95,23 @@ export default {
       gas: 6.9e6,
       chainId: 3
     },
+    
+    //bsc testnet URL with chain id
     bsctest: {
       url: "https://data-seed-prebsc-1-s2.binance.org:8545/",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       chainId: 97
     },
+
+    //HecoInfo testnet URL with chain id
     hecotest: {
       url: "https://http-testnet.hecochain.com/",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       // gasPrice: 1e9,
       chainId: 256
     },
+
+    //Arbitrum testnet URL with chain id
     arethtest: {
       url: "https://rinkeby.arbitrum.io/rpc",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
@@ -104,13 +119,16 @@ export default {
       // gas: 1e6,
       chainId: 421611
     },
+
+    //Polygon testnet URL with chain id
     mumbai: {
-      // url: "https://rpc-mumbai.maticvigil.com",
       url:"https://apis.ankr.com/28e515e83aba427a8334cf38d63d0ae6/363542f636c41556afec7d1feb0f0a88/polygon/full/test",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       // gasPrice: 1e10, //10 Gwei
       chainId: 80001
     },
+
+    //RinkeyBy testnet URL with chain id
     RINKEBY: {
       url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
@@ -118,50 +136,50 @@ export default {
       //gas: 6.9e6,
       chainId: 4
     },
+
+    //Ethernet Mainnet URL with chain id
     ETH: {
-      // url: "http://127.0.0.1:8545",
-      // accounts:{mnemonic:process.env.MNEMONIC},
       url: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       gasPrice: 95e9,
       // gas: 6.9e6,
       chainId: 1
     },
+
+    //Binance Smart Chain Mainnet URL with chain id
     BSC: {
       url: "https://bsc-dataseed.binance.org/",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       gasPrice: 5e9,
-      //gas: 6e6,
       chainId: 56
     },
+
+    //Huobi Eco Chain  Mainnet URL with chain id
     HECO: {
       url: "https://http-mainnet.hecochain.com",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 5e9,
-      // gas: 6e6,
       chainId: 128
     },
+
+    //Polymath Chain  Mainnet URL with chain id
     MATIC: {
       url: "https://polygon-rpc.com/",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 5e9,
-      // gas: 6e6,
       chainId: 137
     },
+
+    //ARBITRUM Chain  Mainnet URL with chain id
     ARBITRUM: {
       url: "https://arb1.arbitrum.io/rpc",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 5e9,
-      // gas: 6e6,
       chainId: 42161
     },
   },
+
   mocha: {
     timeout: 100000
   },
   etherscan: {
-    // Your API key for Etherscan
-    // Obtain one at https://etherscan.io/
     apiKey: ""
   },
 }

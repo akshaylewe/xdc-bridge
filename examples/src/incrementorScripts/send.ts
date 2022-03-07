@@ -1,3 +1,4 @@
+
 import assert from "assert";
 import {ethers, getChainId} from "hardhat";
 import {FROM_CHAIN_ID, INCREMENTOR_ADDRESS_ON_FROM, TO_CHAIN_ID} from "./constants";
@@ -13,6 +14,7 @@ import {parseEther} from "ethers/lib/utils";
 import {IDeBridgeGateInterface} from "../../../typechain-types/IDeBridgeGate";
 import {Log} from "hardhat-deploy/dist/types";
 import {LogDescription} from "@ethersproject/abi";
+import { constantMessage } from "../sendScripts/constantMessage";
 
 const main = async () => {
     assert(await getChainId() === FROM_CHAIN_ID.toString(), `Must be called from chain 'from' (${FROM_CHAIN_ID}), got ${await getChainId()}`);
@@ -31,7 +33,7 @@ const main = async () => {
     const sentLogDescription = await getSentEvent(receipt);
     const {submissionId} = sentLogDescription.args;
 
-    console.log(`Submission id: ${submissionId}`);
+    console.log(constantMessage.Submission,`: ${submissionId}`);
     console.log(`Url: https://testnet.debridge.finance/transaction?tx=${tx.hash}&chainId=${FROM_CHAIN_ID}`);
 
 }
@@ -49,7 +51,7 @@ async function getSentEvent(receipt: ContractReceipt): Promise<LogDescription> {
     const logDescriptions = receipt.logs.map(toLogDescription).filter(isNotNull) as LogDescription[];
 
     const sentEvent = logDescriptions.find(({name}) => name === 'Sent');
-    assert(typeof sentEvent !== 'undefined', 'Sent event is not found');
+    assert(typeof sentEvent !== 'undefined', constantMessage.SendErr);
     return sentEvent;
 }
 

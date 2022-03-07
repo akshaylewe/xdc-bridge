@@ -1,10 +1,16 @@
+//Importing the Library
 import {Incrementor} from "../../../typechain-types";
 import {abi as IncrementorAbi} from "../../../artifacts/contracts/examples/Incrementor.sol/Incrementor.json";
 import {Contract, Wallet} from "ethers";
 import {ethers, getChainId} from "hardhat";
 import assert from "assert";
 import {FROM_CHAIN_ID, INCREMENTOR_ADDRESS_ON_FROM, INCREMENTOR_ADDRESS_ON_TO, TO_CHAIN_ID} from "./constants";
+import { constantMessage } from "../sendScripts/constantMessage";
 
+    /**
+     * @dev Geting the incrementor Reciever.
+     * @param ChainId To map with the Nework URl.
+     */ 
 const main = async () => {
     assert(await getChainId() === TO_CHAIN_ID.toString(), `Must be called from chain 'to' (${TO_CHAIN_ID}), but got ${await getChainId()}`);
 
@@ -12,7 +18,7 @@ const main = async () => {
 
     const incrementorReceiver = new Contract(INCREMENTOR_ADDRESS_ON_TO, IncrementorAbi, signer) as Incrementor;
     if (await incrementorReceiver.isAddressFromChainIdControlling(FROM_CHAIN_ID, INCREMENTOR_ADDRESS_ON_FROM)){
-        console.log('The address is already controlling');
+        console.log(constantMessage.ThisAdrress);
         return;
     }
     await incrementorReceiver.addControllingAddress(INCREMENTOR_ADDRESS_ON_FROM, FROM_CHAIN_ID);
