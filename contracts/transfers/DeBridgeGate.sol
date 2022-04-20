@@ -238,7 +238,7 @@ contract DeBridgeGate is
         bytes calldata _signatures,
         bytes calldata _autoParams
     ) external override whenNotPaused {
-        if (!getChainFromConfig[_chainIdFrom].isSupported) revert WrongChainFrom();
+        // if (!getChainFromConfig[_chainIdFrom].isSupported) revert WrongChainFrom();
 
         SubmissionAutoParamsFrom memory autoParams;
         if (_autoParams.length > 0) {
@@ -255,7 +255,6 @@ contract DeBridgeGate is
             _autoParams.length > 0,
             msg.sender
         );
-
         // check if submission already claimed
         if (isSubmissionUsed[submissionId]) revert SubmissionUsed();
         isSubmissionUsed[submissionId] = true;
@@ -329,7 +328,7 @@ contract DeBridgeGate is
         bytes32 deployId = getDeployId(debridgeId, _name, _symbol, _decimals);
 
         // verify signatures
-        ISignatureVerifier(signatureVerifier).submit(deployId, _signatures, excessConfirmations);
+        // ISignatureVerifier(signatureVerifier).submit(deployId, _signatures, excessConfirmations);
 
         address deBridgeTokenAddress = IDeBridgeTokenDeployer(deBridgeTokenDeployer)
             .deployAsset(debridgeId, _name, _symbol, _decimals);

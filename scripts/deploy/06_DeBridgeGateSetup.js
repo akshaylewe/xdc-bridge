@@ -2,6 +2,11 @@ const debridgeInitParams = require("../../assets/debridgeInitParams");
 const { getLastDeployedProxy, waitTx } = require("../deploy-utils");
 
 module.exports = async function({getNamedAccounts, deployments, network}) {
+  function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
   const { deployer } = await getNamedAccounts();
   const deployInitParams = debridgeInitParams[network.name];
   if (!deployInitParams) return;
@@ -22,12 +27,16 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
   //    setup SignatureVerifier
   // --------------------------------
 
+  console.log("sleeping");
+  await sleep(1000*30);
 
   let signatureVerifier = await getLastDeployedProxy("SignatureVerifier", deployer);
 
   console.log(`deBridge setSignatureVerifier ${signatureVerifier.address}`);
   tx = await deBridgeGateInstance.setSignatureVerifier(signatureVerifier.address);
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
   // was added in constructor
   // console.log(`signatureVerifier setDebridgeAddress ${deBridgeGateInstance.address}`);
@@ -43,12 +52,16 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
   console.log(`deBridge setCallProxy ${callProxy.address}`);
   tx = await deBridgeGateInstance.setCallProxy(callProxy.address);
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
   console.log(`callProxy ${callProxy.address} get DEBRIDGE_GATE_ROLE`);
   const DEBRIDGE_GATE_ROLE = await callProxy.DEBRIDGE_GATE_ROLE();
   console.log(`callProxy grantRole DEBRIDGE_GATE_ROLE "${DEBRIDGE_GATE_ROLE}" for deBridgeGate "${deBridgeGateInstance.address}"`);
   tx = await callProxy.grantRole(DEBRIDGE_GATE_ROLE, deBridgeGateInstance.address);
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
 
   // --------------------------------
@@ -59,6 +72,8 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
   console.log(`deBridge setFeeProxy ${feeProxy.address}`);
   tx = await deBridgeGateInstance.setFeeProxy(feeProxy.address);
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
   // added in constructor
   // console.log(`feeProxy setDebridgeGate ${deBridgeGateInstance.address}`);
@@ -93,6 +108,8 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
     tx = await deBridgeGateInstance.setWethGate(wethGate);
     await waitTx(tx);
   }
+  console.log("sleeping");
+  await sleep(1000*30);
 
 
   // --------------------------------
@@ -104,6 +121,8 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
   console.log(`deBridge setDeBridgeTokenDeployer ${deBridgeTokenDeployer.address}`);
   tx = await deBridgeGateInstance.setDeBridgeTokenDeployer(deBridgeTokenDeployer.address);
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
   // already added in constructor
   // console.log(`deBridgeTokenDeployer setDebridgeAddress ${deBridgeGateInstance.address}`);
@@ -137,6 +156,8 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
     //  ]
   );
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
   tx = await deBridgeGateInstance.updateChainSupport(
     deployInitParams.supportedChains,
@@ -144,6 +165,8 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
     true //_isChainFrom is true for editing getChainFromConfig.
   );
   await waitTx(tx);
+  console.log("sleeping");
+  await sleep(1000*30);
 
   console.log("deployInitParams.supportedChains: ", deployInitParams.supportedChains);
   console.log("deployInitParams.fixedNativeFee: ", deployInitParams.fixedNativeFee);

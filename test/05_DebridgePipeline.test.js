@@ -661,16 +661,6 @@ contract("DeBridgeGate real pipeline mode", function () {
       assert.equal(ZERO_ADDRESS, await this.debridgeETH.wethGate());
     });
 
-    // setWeth removed from contract
-    // it("should set weth if called by the admin", async function() {
-    //   let testAddress = "0x765bDC94443b2D87543ee6BdDEE2208343C8C07A";
-    //   await this.debridgeETH.setWeth(testAddress);
-    //   assert.equal(testAddress, await this.debridgeETH.weth());
-    //   //restore back
-    //   await this.debridgeETH.setWeth(this.wethETH.address);
-    //   assert.equal(this.wethETH.address, await this.debridgeETH.weth());
-    // });
-
     it("should reject setting signatureVerifier if called by the non-admin", async function () {
       await expectRevert(
         this.debridgeETH.connect(bobAccount).setSignatureVerifier(ZERO_ADDRESS),
@@ -698,15 +688,6 @@ contract("DeBridgeGate real pipeline mode", function () {
         "AdminBadRole()"
       );
     });
-
-
-    // setWeth removed from contract
-    // it("should reject setting weth if called by the non-admin", async function() {
-    //   await expectRevert(
-    //     this.debridgeETH.connect(bobAccount).setWeth(ZERO_ADDRESS),
-    //     "onlyAdmin: AdminBadRole()"
-    //   );
-    // });
   });
 
   discountsValues.forEach(discount => {

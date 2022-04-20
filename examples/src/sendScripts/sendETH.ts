@@ -85,12 +85,17 @@ async function send(
         });
 
     logger.info("estimateGas", estimateGas.toString());
+    function sleep(ms) {
+        return new Promise((resolve) => {
+          setTimeout(resolve, ms);
+        });
+      };
 
     const tx =
         {
             from: senderAddress,
             to: debridgeGateAddress,
-            gas: 300000,
+            gas: estimateGas.toString(),
             value: nativeAmount,
             gasPrice: gasPrice,
             nonce,
@@ -110,9 +115,10 @@ async function send(
 
     logger.info("Tx", tx);
     const signedTx = await web3.eth.accounts.signTransaction(tx, privKey);
-    logger.info("Signed tx", signedTx);
+    logger.info("Signed tx", signedTx.hash);
 
     const result = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    await sleep(60000);
     logger.info("Result", result);
     const logs = result.logs.find(l => l.address === debridgeGateAddress);
     const submissionId = logs.data.substring(0, 66);

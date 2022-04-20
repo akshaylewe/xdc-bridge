@@ -1,6 +1,6 @@
 import { config as dotenvConfig } from 'dotenv-flow';
 
-import { task } from "hardhat/config"
+import { task } from "hardhat/config";
 import '@nomiclabs/hardhat-truffle5';
 import 'hardhat-deploy';
 import '@nomiclabs/hardhat-waffle';
@@ -10,8 +10,9 @@ import 'hardhat-gas-reporter';
 import '@nomiclabs/hardhat-solhint';
 import 'prettier-plugin-solidity';
 import 'solidity-coverage';
-import '@typechain/hardhat'
-import '@nomiclabs/hardhat-ethers'
+import '@typechain/hardhat';
+import '@nomiclabs/hardhat-ethers';
+import "@nomiclabs/hardhat-etherscan";
 
 dotenvConfig();
 
@@ -48,15 +49,6 @@ export default {
             runs: 200
           }
         }
-      },
-      {
-        version: "0.6.11",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200
-          }
-        }
       }
     ]
   },
@@ -79,82 +71,18 @@ export default {
       url: "http://127.0.0.1:8545",
       accounts: {mnemonic:process.env.MNEMONIC},
     },
-    kovan: {
-      url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    ropsten: {
+      url: "http://127.0.0.1:8545",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
       gasPrice: 3e9,
-      gas: 6.9e6,
-      chainId: 42
+      gas: 6.9e6
     },
-    bsctest: {
-      url: "https://data-seed-prebsc-1-s2.binance.org:8545/",
+    xdctest: {
+      url: "https://rpc.xinfin.network",
       accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      chainId: 97
-    },
-    hecotest: {
-      url: "https://http-testnet.hecochain.com/",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 1e9,
-      chainId: 256
-    },
-    arethtest: {
-      url: "https://rinkeby.arbitrum.io/rpc",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 1e9,
-      // gas: 1e6,
-      chainId: 421611
-    },
-    mumbai: {
-      // url: "https://rpc-mumbai.maticvigil.com",
-      url:"https://apis.ankr.com/28e515e83aba427a8334cf38d63d0ae6/363542f636c41556afec7d1feb0f0a88/polygon/full/test",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 1e10, //10 Gwei
-      chainId: 80001
-    },
-    RINKEBY: {
-      url: "https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      gasPrice: 2e9,
-      //gas: 6.9e6,
-      chainId: 4
-    },
-    ETH: {
-      // url: "http://127.0.0.1:8545",
-      // accounts:{mnemonic:process.env.MNEMONIC},
-      url: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      gasPrice: 95e9,
-      // gas: 6.9e6,
-      chainId: 1
-    },
-    BSC: {
-      url: "https://bsc-dataseed.binance.org/",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      gasPrice: 5e9,
-      //gas: 6e6,
-      chainId: 56
-    },
-    HECO: {
-      url: "https://http-mainnet.hecochain.com",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 5e9,
-      // gas: 6e6,
-      chainId: 128
-    },
-    MATIC: {
-      url: "https://polygon-rpc.com/",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 5e9,
-      // gas: 6e6,
-      chainId: 137
-    },
-    ARBITRUM: {
-      url: "https://arb1.arbitrum.io/rpc",
-      accounts: [process.env.DEPLOYER_PRIVATE_KEY],
-      // gasPrice: 5e9,
-      // gas: 6e6,
-      chainId: 42161
-    },
+      chainId: 50,
+      gas: 6.9e6
+    }
   },
   mocha: {
     timeout: 100000
@@ -162,7 +90,7 @@ export default {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: ""
+    apiKey: "YI7E9KWYZZ6Y978CKHYG7IQZG91571XVX6"
   },
 }
 

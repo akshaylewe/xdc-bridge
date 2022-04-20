@@ -48,7 +48,7 @@ module.exports = async function({getNamedAccounts, deployments, network}) {
     const item = await deBridgeTokenDeployer.overridedTokens(debridgeId);
     console.log(`debridgeId: ${debridgeId} `, item);
   }
-};
+}; 
 
 module.exports.tags = ["07_DeBridgeTokenDeployerSetup"]
 module.exports.dependencies = [
